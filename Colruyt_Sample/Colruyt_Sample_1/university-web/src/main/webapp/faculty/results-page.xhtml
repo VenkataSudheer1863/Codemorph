@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Publish Results — UniAMS (Faculty)</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="app-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎓</div>
+                <h2>UniAMS</h2>
+                <span>Faculty Portal</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="/university/faculty/faculty-dashboard.xhtml" class="nav-link"><span
+                        class="icon">📊</span><span>Dashboard</span></a>
+                <a href="/university/faculty/exam-management.xhtml" class="nav-link"><span
+                        class="icon">📋</span><span>Schedule Exams</span></a>
+                <a href="/university/faculty/results-page.xhtml" class="nav-link active"><span
+                        class="icon">🏆</span><span>Publish Results</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">#{authBean.loggedInName.substring(0,1)}</div>
+                    <div class="user-details">
+                        <div class="user-name">#{authBean.loggedInName}</div>
+                        <span class="user-role">FACULTY</span>
+                    </div>
+                </div>
+                <h:form>
+                    <h:commandButton value="⏻ Logout" action="#{authBean.logout}" styleClass="btn-logout"
+                        style="width:100%" />
+                </h:form>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">
+                    <h1>Publish Student Results</h1>
+                    <p>Upload results for students enrolled in your courses</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <h:messages globalOnly="true" errorClass="ui-messages-error" infoClass="ui-messages-info"
+                    styleClass="messages" />
+
+                <div class="form-panel">
+                    <h3>🏆 Publish Result</h3>
+                    <h:form id="publishForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Student *</label>
+                                <h:selectOneMenu value="#{resultBean.selectedStudentId}" required="true">
+                                    <f:selectItem itemLabel="-- Select Student --" itemValue="" />
+                                    <f:selectItems value="#{resultBean.allStudents}" var="s" itemValue="#{s.studentId}"
+                                        itemLabel="#{s.fullName}" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Course *</label>
+                                <h:selectOneMenu value="#{resultBean.selectedCourseId}" required="true">
+                                    <f:selectItem itemLabel="-- Select Your Course --" itemValue="" />
+                                    <f:selectItems value="#{courseBean.getCoursesByFaculty(authBean.loggedInUserId)}"
+                                        var="c" itemValue="#{c.courseId}" itemLabel="#{c.courseName}" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Grade *</label>
+                                <h:selectOneMenu value="#{resultBean.grade}" required="true">
+                                    <f:selectItem itemLabel="-- Grade --" itemValue="" />
+                                    <f:selectItem itemLabel="A+" itemValue="A+" />
+                                    <f:selectItem itemLabel="A" itemValue="A" />
+                                    <f:selectItem itemLabel="B+" itemValue="B+" />
+                                    <f:selectItem itemLabel="B" itemValue="B" />
+                                    <f:selectItem itemLabel="C" itemValue="C" />
+                                    <f:selectItem itemLabel="D" itemValue="D" />
+                                    <f:selectItem itemLabel="F" itemValue="F" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Marks Obtained</label>
+                                <h:inputText value="#{resultBean.marksObtained}" placeholder="e.g., 85" />
+                            </div>
+                            <div class="form-group">
+                                <label>Total Marks</label>
+                                <h:inputText value="#{resultBean.totalMarks}" placeholder="e.g., 100" />
+                            </div>
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <h:inputText value="#{resultBean.remarks}" placeholder="Optional" />
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="✓ Publish Result" action="#{resultBean.publishResult}"
+                                styleClass="btn btn-success" />
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </main>
+    </div>
+</h:body>
+
+</html>

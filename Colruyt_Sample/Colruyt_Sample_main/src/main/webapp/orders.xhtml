@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:th="http://www.thymeleaf.org">
+
+<h:head>
+    <title>Order Management - LegacyRetailManager</title>
+    <h:outputStylesheet library="css" name="styles.css"/>
+</h:head>
+
+<h:body>
+
+    <h1>Order Management</h1>
+
+    <!-- JSF Form for creating an order -->
+    <h:form id="orderForm">
+        <h:panelGrid columns="2">
+            <h:outputLabel for="customerId" value="Customer ID:"/>
+            <h:inputText id="customerId" value="#{orderBean.customerId}" required="true"/>
+
+            <h:outputLabel for="totalAmount" value="Total Amount:"/>
+            <h:inputText id="totalAmount" value="#{orderBean.totalAmount}"/>
+        </h:panelGrid>
+
+        <h:commandButton value="Create Order" action="#{orderBean.createOrder}">
+            <f:ajax execute="@form" render="orderTable messages"/>
+        </h:commandButton>
+
+        <h:messages id="messages" globalOnly="false" showDetail="true"/>
+    </h:form>
+
+    <!-- JSF DataTable for listing orders -->
+    <h:dataTable id="orderTable" value="#{orderBean.orders}" var="order"
+                 styleClass="order-table" headerClass="table-header" rowClasses="row-odd,row-even">
+        <h:column>
+            <f:facet name="header">Order ID</f:facet>
+            <h:outputText value="#{order.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Customer ID</f:facet>
+            <h:outputText value="#{order.customerId}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Status</f:facet>
+            <h:outputText value="#{order.status}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Total Amount</f:facet>
+            <h:outputText value="#{order.totalAmount}">
+                <f:convertNumber type="currency" currencySymbol="$"/>
+            </h:outputText>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Actions</f:facet>
+            <h:commandButton value="Delete" action="#{orderBean.deleteOrder(order.id)}">
+                <f:ajax execute="@this" render="orderTable"/>
+            </h:commandButton>
+        </h:column>
+    </h:dataTable>
+
+    <!-- Thymeleaf mixed syntax (legacy hybrid pattern) -->
+    <div th:if="${not empty orders}">
+        <table>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}">ID</td>
+                <td th:text="${order.status}">Status</td>
+                <td th:text="${order.totalAmount}">Amount</td>
+            </tr>
+        </table>
+    </div>
+
+</h:body>
+</html>

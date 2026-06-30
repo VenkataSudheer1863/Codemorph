@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Exam Management — UniAMS</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="app-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎓</div>
+                <h2>UniAMS</h2>
+                <span>Admin Panel</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="/university/admin/admin-dashboard.xhtml" class="nav-link"><span
+                        class="icon">📊</span><span>Dashboard</span></a>
+                <a href="/university/admin/student-management.xhtml" class="nav-link"><span
+                        class="icon">👨‍🎓</span><span>Students</span></a>
+                <a href="/university/admin/faculty-management.xhtml" class="nav-link"><span
+                        class="icon">👨‍🏫</span><span>Faculty</span></a>
+                <a href="/university/admin/course-management.xhtml" class="nav-link"><span
+                        class="icon">📚</span><span>Courses</span></a>
+                <a href="/university/admin/enrollment-page.xhtml" class="nav-link"><span
+                        class="icon">📝</span><span>Enrollments</span></a>
+                <a href="/university/admin/exam-management.xhtml" class="nav-link active"><span
+                        class="icon">📋</span><span>Exams</span></a>
+                <a href="/university/admin/results-page.xhtml" class="nav-link"><span
+                        class="icon">🏆</span><span>Results</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div class="user-details">
+                        <div class="user-name">#{authBean.loggedInName}</div>
+                        <span class="user-role">ADMIN</span>
+                    </div>
+                </div>
+                <h:form>
+                    <h:commandButton value="⏻ Logout" action="#{authBean.logout}" styleClass="btn-logout"
+                        style="width:100%" />
+                </h:form>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">
+                    <h1>Exam Management</h1>
+                    <p>Schedule and manage academic exams</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <h:messages globalOnly="true" errorClass="ui-messages-error" infoClass="ui-messages-info"
+                    styleClass="messages" />
+
+                <!-- Schedule Exam Form -->
+                <div class="form-panel">
+                    <h3>📋 Schedule New Exam</h3>
+                    <h:form id="addExamForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Course *</label>
+                                <h:selectOneMenu value="#{examBean.selectedCourseId}" required="true">
+                                    <f:selectItem itemLabel="-- Select Course --" itemValue="" />
+                                    <f:selectItems value="#{examBean.allCourses}" var="c" itemValue="#{c.courseId}"
+                                        itemLabel="#{c.courseName}" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Exam Date *</label>
+                                <h:inputText value="#{examBean.examDate}" placeholder="YYYY-MM-DD" required="true">
+                                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                                </h:inputText>
+                            </div>
+                            <div class="form-group">
+                                <label>Exam Type</label>
+                                <h:selectOneMenu value="#{examBean.examType}">
+                                    <f:selectItem itemLabel="-- Select Type --" itemValue="" />
+                                    <f:selectItem itemLabel="Midterm" itemValue="Midterm" />
+                                    <f:selectItem itemLabel="Final" itemValue="Final" />
+                                    <f:selectItem itemLabel="Quiz" itemValue="Quiz" />
+                                    <f:selectItem itemLabel="Practical" itemValue="Practical" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Location / Hall</label>
+                                <h:inputText value="#{examBean.location}" placeholder="e.g., Hall A" />
+                            </div>
+                            <div class="form-group">
+                                <label>Duration (minutes)</label>
+                                <h:inputText value="#{examBean.durationMinutes}" placeholder="e.g., 180" />
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="✓ Schedule Exam" action="#{examBean.saveExam}"
+                                styleClass="btn btn-primary" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <!-- Exams Table -->
+                <div class="data-section">
+                    <div class="data-section-header">
+                        <h3>All Scheduled Exams</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Course</th>
+                                <th>Exam Date</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Duration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{examBean.exams}" var="exam">
+                                <tr>
+                                    <td><span class="badge badge-orange">##{exam.examId}</span></td>
+                                    <td style="font-weight:600">#{exam.courseName}</td>
+                                    <td>#{exam.examDate}</td>
+                                    <td><span class="badge badge-blue">#{exam.examType}</span></td>
+                                    <td style="color: var(--text-secondary)">#{exam.location}</td>
+                                    <td>#{exam.durationMinutes} min</td>
+                                    <td>
+                                        <h:form>
+                                            <h:commandButton value="🗑 Delete"
+                                                action="#{examBean.deleteExam(exam.examId)}"
+                                                styleClass="btn btn-danger btn-sm"
+                                                onclick="return confirm('Delete this exam?')" />
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</h:body>
+
+</html>

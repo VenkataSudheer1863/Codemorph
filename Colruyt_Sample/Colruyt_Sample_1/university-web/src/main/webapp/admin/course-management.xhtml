@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Course Management — UniAMS</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="app-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎓</div>
+                <h2>UniAMS</h2>
+                <span>Admin Panel</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="/university/admin/admin-dashboard.xhtml" class="nav-link">
+                    <span class="icon">📊</span><span>Dashboard</span>
+                </a>
+                <a href="/university/admin/student-management.xhtml" class="nav-link">
+                    <span class="icon">👨‍🎓</span><span>Students</span>
+                </a>
+                <a href="/university/admin/faculty-management.xhtml" class="nav-link">
+                    <span class="icon">👨‍🏫</span><span>Faculty</span>
+                </a>
+                <a href="/university/admin/course-management.xhtml" class="nav-link active">
+                    <span class="icon">📚</span><span>Courses</span>
+                </a>
+                <a href="/university/admin/enrollment-page.xhtml" class="nav-link">
+                    <span class="icon">📝</span><span>Enrollments</span>
+                </a>
+                <a href="/university/admin/exam-management.xhtml" class="nav-link">
+                    <span class="icon">📋</span><span>Exams</span>
+                </a>
+                <a href="/university/admin/results-page.xhtml" class="nav-link">
+                    <span class="icon">🏆</span><span>Results</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div class="user-details">
+                        <div class="user-name">#{authBean.loggedInName}</div>
+                        <span class="user-role">ADMIN</span>
+                    </div>
+                </div>
+                <h:form>
+                    <h:commandButton value="⏻ Logout" action="#{authBean.logout}" styleClass="btn-logout"
+                        style="width:100%" />
+                </h:form>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">
+                    <h1>Course Management</h1>
+                    <p>Create courses and assign faculty members</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <h:messages id="messages" globalOnly="true" errorClass="ui-messages-error" infoClass="ui-messages-info"
+                    styleClass="messages" />
+
+                <!-- Create Course Form -->
+                <div class="form-panel">
+                    <h3>➕ Create New Course</h3>
+                    <h:form id="addCourseForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Course Name *</label>
+                                <h:inputText value="#{courseBean.courseName}" placeholder="e.g., Data Structures"
+                                    required="true" />
+                            </div>
+                            <div class="form-group">
+                                <label>Credits *</label>
+                                <h:inputText value="#{courseBean.credits}" placeholder="e.g., 3" required="true" />
+                            </div>
+                            <div class="form-group">
+                                <label>Department *</label>
+                                <h:selectOneMenu value="#{courseBean.department}" required="true">
+                                    <f:selectItem itemLabel="-- Select Department --" itemValue="" />
+                                    <f:selectItem itemLabel="Computer Science" itemValue="Computer Science" />
+                                    <f:selectItem itemLabel="Information Technology"
+                                        itemValue="Information Technology" />
+                                    <f:selectItem itemLabel="Electronics Engineering"
+                                        itemValue="Electronics Engineering" />
+                                    <f:selectItem itemLabel="Mathematics" itemValue="Mathematics" />
+                                    <f:selectItem itemLabel="Business Administration"
+                                        itemValue="Business Administration" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Assign Faculty</label>
+                                <h:selectOneMenu value="#{courseBean.selectedFacultyId}">
+                                    <f:selectItem itemLabel="-- No Faculty Assigned --" itemValue="" />
+                                    <f:selectItems value="#{courseBean.allFaculty}" var="f" itemValue="#{f.facultyId}"
+                                        itemLabel="#{f.name} (#{f.department})" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="✓ Create Course" action="#{courseBean.saveCourse}"
+                                styleClass="btn btn-primary" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <!-- Courses Table -->
+                <div class="data-section">
+                    <div class="data-section-header">
+                        <div>
+                            <h3>All Courses</h3>
+                            <p>Total: #{courseBean.courseCount} courses</p>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Course Name</th>
+                                <th>Department</th>
+                                <th>Credits</th>
+                                <th>Faculty</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{courseBean.courses}" var="course">
+                                <tr>
+                                    <td><span class="badge badge-green">##{course.courseId}</span></td>
+                                    <td style="font-weight: 600">#{course.courseName}</td>
+                                    <td>#{course.department}</td>
+                                    <td><span class="badge badge-orange">#{course.credits} Credits</span></td>
+                                    <td style="color: var(--text-secondary)">#{course.facultyName}</td>
+                                    <td>
+                                        <h:form>
+                                            <h:commandButton value="✏ Edit"
+                                                action="#{courseBean.editCourse(course.courseId)}"
+                                                styleClass="btn btn-secondary btn-sm" />
+                                            <h:commandButton value="🗑 Delete"
+                                                action="#{courseBean.deleteCourse(course.courseId)}"
+                                                styleClass="btn btn-danger btn-sm"
+                                                onclick="return confirm('Delete this course?')" />
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</h:body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>University Academic Management System — Login</title>
+    <meta name="description" content="Secure login portal for the University Academic Management System"/>
+    <h:outputStylesheet library="css" name="styles.css"/>
+</h:head>
+
+<h:body>
+    <div class="login-wrapper">
+        <div class="login-bg-decoration"></div>
+        <div class="login-bg-decoration-2"></div>
+
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">🎓</div>
+                <h1>UniAMS</h1>
+                <p>University Academic Management System</p>
+            </div>
+
+            <h:form id="loginForm">
+                <h:messages id="messages" globalOnly="true"
+                            styleClass="ui-messages-error"
+                            errorClass="ui-messages-error"
+                            infoClass="ui-messages-info"/>
+
+                <div class="login-form">
+                    <div class="login-input-group">
+                        <label for="email">Email Address</label>
+                        <h:inputText id="email" value="#{authBean.email}"
+                                     placeholder="Enter your email"
+                                     styleClass="login-input"
+                                     required="true"/>
+                    </div>
+
+                    <div class="login-input-group">
+                        <label for="password">Password</label>
+                        <h:inputSecret id="password" value="#{authBean.password}"
+                                       placeholder="Enter your password"
+                                       styleClass="login-input"
+                                       required="true"/>
+                    </div>
+
+                    <h:commandButton value="Sign In → "
+                                     action="#{authBean.login}"
+                                     styleClass="login-btn"
+                                     id="loginBtn"/>
+                </div>
+            </h:form>
+
+            <div class="login-hints">
+                <h4>Demo Credentials</h4>
+                <p>
+                    <strong>Admin:</strong> admin@university.edu / Admin@123<br/>
+                    <strong>Faculty:</strong> Use a registered faculty email<br/>
+                    <strong>Student:</strong> Use a registered student email
+                </p>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

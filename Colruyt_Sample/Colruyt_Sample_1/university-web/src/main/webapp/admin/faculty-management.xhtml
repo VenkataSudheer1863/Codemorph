@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Faculty Management — UniAMS</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="app-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎓</div>
+                <h2>UniAMS</h2>
+                <span>Admin Panel</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="/university/admin/admin-dashboard.xhtml" class="nav-link">
+                    <span class="icon">📊</span><span>Dashboard</span>
+                </a>
+                <a href="/university/admin/student-management.xhtml" class="nav-link">
+                    <span class="icon">👨‍🎓</span><span>Students</span>
+                </a>
+                <a href="/university/admin/faculty-management.xhtml" class="nav-link active">
+                    <span class="icon">👨‍🏫</span><span>Faculty</span>
+                </a>
+                <a href="/university/admin/course-management.xhtml" class="nav-link">
+                    <span class="icon">📚</span><span>Courses</span>
+                </a>
+                <a href="/university/admin/enrollment-page.xhtml" class="nav-link">
+                    <span class="icon">📝</span><span>Enrollments</span>
+                </a>
+                <a href="/university/admin/exam-management.xhtml" class="nav-link">
+                    <span class="icon">📋</span><span>Exams</span>
+                </a>
+                <a href="/university/admin/results-page.xhtml" class="nav-link">
+                    <span class="icon">🏆</span><span>Results</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div class="user-details">
+                        <div class="user-name">#{authBean.loggedInName}</div>
+                        <span class="user-role">ADMIN</span>
+                    </div>
+                </div>
+                <h:form>
+                    <h:commandButton value="⏻ Logout" action="#{authBean.logout}" styleClass="btn-logout"
+                        style="width:100%" />
+                </h:form>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">
+                    <h1>Faculty Management</h1>
+                    <p>Add and manage faculty members and their course assignments</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <h:messages id="messages" globalOnly="true" errorClass="ui-messages-error" infoClass="ui-messages-info"
+                    styleClass="messages" />
+
+                <!-- Add Faculty Form -->
+                <div class="form-panel">
+                    <h3>➕ Add Faculty Member</h3>
+                    <h:form id="addFacultyForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Full Name *</label>
+                                <h:inputText value="#{facultyBean.name}" placeholder="Dr. / Prof. Full Name"
+                                    required="true" />
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address *</label>
+                                <h:inputText value="#{facultyBean.email}" placeholder="faculty@university.edu"
+                                    required="true" />
+                            </div>
+                            <div class="form-group">
+                                <label>Department *</label>
+                                <h:selectOneMenu value="#{facultyBean.department}" required="true">
+                                    <f:selectItem itemLabel="-- Select Department --" itemValue="" />
+                                    <f:selectItem itemLabel="Computer Science" itemValue="Computer Science" />
+                                    <f:selectItem itemLabel="Information Technology"
+                                        itemValue="Information Technology" />
+                                    <f:selectItem itemLabel="Electronics Engineering"
+                                        itemValue="Electronics Engineering" />
+                                    <f:selectItem itemLabel="Mechanical Engineering"
+                                        itemValue="Mechanical Engineering" />
+                                    <f:selectItem itemLabel="Mathematics" itemValue="Mathematics" />
+                                    <f:selectItem itemLabel="Business Administration"
+                                        itemValue="Business Administration" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Designation *</label>
+                                <h:selectOneMenu value="#{facultyBean.designation}" required="true">
+                                    <f:selectItem itemLabel="-- Select Designation --" itemValue="" />
+                                    <f:selectItem itemLabel="Professor" itemValue="Professor" />
+                                    <f:selectItem itemLabel="Associate Professor" itemValue="Associate Professor" />
+                                    <f:selectItem itemLabel="Assistant Professor" itemValue="Assistant Professor" />
+                                    <f:selectItem itemLabel="Lecturer" itemValue="Lecturer" />
+                                    <f:selectItem itemLabel="Senior Lecturer" itemValue="Senior Lecturer" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Password *</label>
+                                <h:inputSecret value="#{facultyBean.password}" placeholder="Set password"
+                                    required="true" />
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="✓ Add Faculty" action="#{facultyBean.saveFaculty}"
+                                styleClass="btn btn-primary" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <!-- Faculty Table -->
+                <div class="data-section">
+                    <div class="data-section-header">
+                        <div>
+                            <h3>All Faculty Members</h3>
+                            <p>Total: #{facultyBean.facultyCount} faculty members</p>
+                        </div>
+                        <h:form id="searchForm">
+                            <div class="search-bar">
+                                <span>🔍</span>
+                                <h:inputText value="#{facultyBean.searchQuery}" placeholder="Search by name..." />
+                                <h:commandButton value="Search" action="#{facultyBean.searchFaculty}"
+                                    styleClass="btn btn-secondary btn-sm" />
+                            </div>
+                        </h:form>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{facultyBean.facultyList}" var="faculty">
+                                <tr>
+                                    <td><span class="badge badge-purple">##{faculty.facultyId}</span></td>
+                                    <td style="font-weight: 600">#{faculty.name}</td>
+                                    <td style="color: var(--text-secondary)">#{faculty.email}</td>
+                                    <td>#{faculty.department}</td>
+                                    <td><span class="badge badge-blue">#{faculty.designation}</span></td>
+                                    <td>
+                                        <h:form>
+                                            <h:commandButton value="✏ Edit"
+                                                action="#{facultyBean.editFaculty(faculty.facultyId)}"
+                                                styleClass="btn btn-secondary btn-sm" />
+                                            <h:commandButton value="🗑 Delete"
+                                                action="#{facultyBean.deleteFaculty(faculty.facultyId)}"
+                                                styleClass="btn btn-danger btn-sm"
+                                                onclick="return confirm('Delete this faculty member?')" />
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</h:body>
+
+</html>

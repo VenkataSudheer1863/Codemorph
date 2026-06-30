@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.university</groupId>
+        <artifactId>university-system</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>university-ear</artifactId>
+    <packaging>ear</packaging>
+    <name>University EAR Assembly</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.university</groupId>
+            <artifactId>university-persistence</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.university</groupId>
+            <artifactId>university-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>com.university</groupId>
+            <artifactId>university-soap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.university</groupId>
+            <artifactId>university-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.university</groupId>
+            <artifactId>university-web</artifactId>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <configuration>
+                    <version>8</version>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <ejbModule>
+                            <groupId>com.university</groupId>
+                            <artifactId>university-ejb</artifactId>
+                        </ejbModule>
+                        <jarModule>
+                            <groupId>com.university</groupId>
+                            <artifactId>university-persistence</artifactId>
+                            <bundleDir>lib</bundleDir>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>com.university</groupId>
+                            <artifactId>university-soap</artifactId>
+                            <bundleDir>lib</bundleDir>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>com.university</groupId>
+                            <artifactId>university-rest</artifactId>
+                            <bundleDir>lib</bundleDir>
+                        </jarModule>
+                        <webModule>
+                            <groupId>com.university</groupId>
+                            <artifactId>university-web</artifactId>
+                            <contextRoot>/university</contextRoot>
+                        </webModule>
+                    </modules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

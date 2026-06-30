@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>My Results — UniAMS</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="app-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎓</div>
+                <h2>UniAMS</h2>
+                <span>Student Portal</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="/university/student/student-dashboard.xhtml" class="nav-link"><span
+                        class="icon">📊</span><span>Dashboard</span></a>
+                <a href="/university/student/enrollment-page.xhtml" class="nav-link"><span
+                        class="icon">📝</span><span>Course Enrollment</span></a>
+                <a href="/university/student/results-page.xhtml" class="nav-link active"><span
+                        class="icon">🏆</span><span>My Results</span></a>
+                <a href="/university/student/exam-schedule.xhtml" class="nav-link"><span
+                        class="icon">📋</span><span>Exam Schedule</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">#{authBean.loggedInName.substring(0,1)}</div>
+                    <div class="user-details">
+                        <div class="user-name">#{authBean.loggedInName}</div>
+                        <span class="user-role">STUDENT</span>
+                    </div>
+                </div>
+                <h:form>
+                    <h:commandButton value="⏻ Logout" action="#{authBean.logout}" styleClass="btn-logout"
+                        style="width:100%" />
+                </h:form>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">
+                    <h1>My Academic Results</h1>
+                    <p>View your grades and academic performance</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="data-section">
+                    <div class="data-section-header">
+                        <div>
+                            <h3>Complete Transcript</h3>
+                            <p>All published results for #{authBean.loggedInName}</p>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Department</th>
+                                <th>Grade</th>
+                                <th>Marks Obtained</th>
+                                <th>Total Marks</th>
+                                <th>Percentage</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{resultBean.myResults}" var="r">
+                                <tr>
+                                    <td style="font-weight:600">#{r.course.courseName}</td>
+                                    <td>#{r.course.department}</td>
+                                    <td>
+                                        <span
+                                            class="badge #{r.grade == 'F' ? 'badge-red' : r.grade.startsWith('A') ? 'badge-green' : 'badge-orange'}">
+                                            #{r.grade}
+                                        </span>
+                                    </td>
+                                    <td>#{r.marksObtained}</td>
+                                    <td>#{r.totalMarks}</td>
+                                    <td>
+                                        <span class="badge badge-blue">
+                                            <h:outputText value="#{r.percentage}">
+                                                <f:convertNumber maxFractionDigits="1" />
+                                            </h:outputText>%
+                                        </span>
+                                    </td>
+                                    <td style="color: var(--text-secondary)">#{r.remarks}</td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</h:body>
+
+</html>

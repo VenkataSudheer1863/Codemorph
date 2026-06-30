@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Course Enrollment — UniAMS</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="app-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎓</div>
+                <h2>UniAMS</h2>
+                <span>Student Portal</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="/university/student/student-dashboard.xhtml" class="nav-link"><span
+                        class="icon">📊</span><span>Dashboard</span></a>
+                <a href="/university/student/enrollment-page.xhtml" class="nav-link active"><span
+                        class="icon">📝</span><span>Course Enrollment</span></a>
+                <a href="/university/student/results-page.xhtml" class="nav-link"><span class="icon">🏆</span><span>My
+                        Results</span></a>
+                <a href="/university/student/exam-schedule.xhtml" class="nav-link"><span
+                        class="icon">📋</span><span>Exam Schedule</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">#{authBean.loggedInName.substring(0,1)}</div>
+                    <div class="user-details">
+                        <div class="user-name">#{authBean.loggedInName}</div>
+                        <span class="user-role">STUDENT</span>
+                    </div>
+                </div>
+                <h:form>
+                    <h:commandButton value="⏻ Logout" action="#{authBean.logout}" styleClass="btn-logout"
+                        style="width:100%" />
+                </h:form>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">
+                    <h1>Course Enrollment</h1>
+                    <p>Browse and enroll in available courses</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <h:messages globalOnly="true" errorClass="ui-messages-error" infoClass="ui-messages-info"
+                    styleClass="messages" />
+
+                <!-- Enrollment Form -->
+                <div class="form-panel">
+                    <h3>📝 Enroll in a Course</h3>
+                    <h:form id="enrollForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Select Course *</label>
+                                <h:selectOneMenu value="#{enrollmentBean.selectedCourseId}" required="true">
+                                    <f:selectItem itemLabel="-- Select a Course --" itemValue="" />
+                                    <f:selectItems value="#{enrollmentBean.availableCourses}" var="c"
+                                        itemValue="#{c.courseId}"
+                                        itemLabel="#{c.courseName} (#{c.credits} credits — #{c.department})" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label>Semester *</label>
+                                <h:selectOneMenu value="#{enrollmentBean.semester}" required="true">
+                                    <f:selectItem itemLabel="-- Select Semester --" itemValue="" />
+                                    <f:selectItem itemLabel="Fall 2025" itemValue="Fall 2025" />
+                                    <f:selectItem itemLabel="Spring 2026" itemValue="Spring 2026" />
+                                    <f:selectItem itemLabel="Summer 2026" itemValue="Summer 2026" />
+                                    <f:selectItem itemLabel="Fall 2026" itemValue="Fall 2026" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <h:commandButton value="✓ Enroll Now" action="#{enrollmentBean.enrollInCourse}"
+                                styleClass="btn btn-primary" />
+                        </div>
+                    </h:form>
+                </div>
+
+                <!-- My Enrollments Table -->
+                <div class="data-section">
+                    <div class="data-section-header">
+                        <h3>My Current Enrollments</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Department</th>
+                                <th>Credits</th>
+                                <th>Faculty</th>
+                                <th>Semester</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{enrollmentBean.myEnrollments}" var="e">
+                                <tr>
+                                    <td style="font-weight:600">#{e.course.courseName}</td>
+                                    <td>#{e.course.department}</td>
+                                    <td><span class="badge badge-orange">#{e.course.credits} Cr</span></td>
+                                    <td style="color: var(--text-secondary)">#{e.course.facultyName}</td>
+                                    <td><span class="badge badge-green">#{e.semester}</span></td>
+                                    <td>
+                                        <h:form>
+                                            <h:commandButton value="⊖ Drop Course"
+                                                action="#{enrollmentBean.dropCourse(e.enrollmentId)}"
+                                                styleClass="btn btn-danger btn-sm"
+                                                onclick="return confirm('Drop this course?')" />
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</h:body>
+
+</html>

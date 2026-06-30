@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Enrollment Management — UniAMS</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+    <div class="app-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🎓</div>
+                <h2>UniAMS</h2>
+                <span>Admin Panel</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="/university/admin/admin-dashboard.xhtml" class="nav-link"><span
+                        class="icon">📊</span><span>Dashboard</span></a>
+                <a href="/university/admin/student-management.xhtml" class="nav-link"><span
+                        class="icon">👨‍🎓</span><span>Students</span></a>
+                <a href="/university/admin/faculty-management.xhtml" class="nav-link"><span
+                        class="icon">👨‍🏫</span><span>Faculty</span></a>
+                <a href="/university/admin/course-management.xhtml" class="nav-link"><span
+                        class="icon">📚</span><span>Courses</span></a>
+                <a href="/university/admin/enrollment-page.xhtml" class="nav-link active"><span
+                        class="icon">📝</span><span>Enrollments</span></a>
+                <a href="/university/admin/exam-management.xhtml" class="nav-link"><span
+                        class="icon">📋</span><span>Exams</span></a>
+                <a href="/university/admin/results-page.xhtml" class="nav-link"><span
+                        class="icon">🏆</span><span>Results</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div class="user-details">
+                        <div class="user-name">#{authBean.loggedInName}</div>
+                        <span class="user-role">ADMIN</span>
+                    </div>
+                </div>
+                <h:form>
+                    <h:commandButton value="⏻ Logout" action="#{authBean.logout}" styleClass="btn-logout"
+                        style="width:100%" />
+                </h:form>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">
+                    <h1>Enrollment Management</h1>
+                    <p>View and manage student course enrollments</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <h:messages globalOnly="true" errorClass="ui-messages-error" infoClass="ui-messages-info"
+                    styleClass="messages" />
+
+                <!-- All Enrollments Table -->
+                <div class="data-section">
+                    <div class="data-section-header">
+                        <div>
+                            <h3>All Enrollments</h3>
+                            <p>Total active enrollments: #{enrollmentBean.enrollmentCount}</p>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{enrollmentBean.getAllEnrollments()}" var="e">
+                                <tr>
+                                    <td><span class="badge badge-blue">##{e.enrollmentId}</span></td>
+                                    <td style="font-weight:600">#{e.student.fullName}</td>
+                                    <td>#{e.course.courseName}</td>
+                                    <td><span class="badge badge-green">#{e.semester}</span></td>
+                                    <td>
+                                        <h:form>
+                                            <h:commandButton value="🗑 Drop"
+                                                action="#{enrollmentBean.dropCourse(e.enrollmentId)}"
+                                                styleClass="btn btn-danger btn-sm"
+                                                onclick="return confirm('Drop this enrollment?')" />
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</h:body>
+
+</html>

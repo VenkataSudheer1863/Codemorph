@@ -1,0 +1,36 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+python-dotenv
+groq
+reportlab
+sentence-transformers
+faiss-cpu
+numpy
+
+# LangChain and LangGraph for agentic system
+langchain
+langchain-groq
+langchain-community
+langgraph
+
+# Basic dependencies for enhanced functionality
+networkx
+sqlparse
+regex
+jinja2
+jsonschema
+pytest
+pytest-asyncio
+
+# Tree-sitter for AST-based parsing
+# NOTE: tree-sitter core requires Microsoft C++ Build Tools on Windows.
+# Install from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+# Then run: pip install tree-sitter==0.21.3
+# Language grammars (pre-built wheels, install independently):
+tree-sitter==0.21.3
+tree-sitter-python==0.21.0
+tree-sitter-java==0.21.0
+tree-sitter-javascript==0.21.0
+tree-sitter-typescript==0.21.0

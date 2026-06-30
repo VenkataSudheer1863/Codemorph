@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    WildFly datasource configuration.
+    Copy this content into:
+    $WILDFLY_HOME/standalone/configuration/standalone.xml
+    within the <datasources> section.
+    Or use the WildFly Admin Console at http://localhost:9990
+-->
+<datasources>
+    <datasource jndi-name="java:jboss/datasources/UniversityDS"
+                pool-name="UniversityDS"
+                enabled="true"
+                use-java-context="true">
+
+        <!-- PostgreSQL JDBC URL -->
+        <connection-url>jdbc:postgresql://localhost:5432/university_db</connection-url>
+
+        <!-- Driver name must match the <driver> definition below -->
+        <driver>postgresql</driver>
+
+        <security>
+            <user-name>university_user</user-name>
+            <password>university_pass</password>
+        </security>
+
+        <pool>
+            <min-pool-size>5</min-pool-size>
+            <max-pool-size>20</max-pool-size>
+            <prefill>true</prefill>
+        </pool>
+
+        <validation>
+            <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"/>
+            <validate-on-match>true</validate-on-match>
+            <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"/>
+        </validation>
+    </datasource>
+
+    <drivers>
+        <driver name="postgresql" module="org.postgresql">
+            <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+        </driver>
+    </drivers>
+</datasources>
